@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Interfaces
+namespace Interfaces.Vehicles
 {
     public interface Vehicle : Abstract.IHaveMass, Abstract.IHaveHealth
     {
@@ -15,9 +15,7 @@ namespace Interfaces
 
         uint MaxVelocity { get; }
 
-        bool IsWeaponFit(IVehicleWeapon weapon, int mountpoint);
-        Dictionary<int, Abstract.SizeXY> WeaponMountSlots { get; }
-        Dictionary<int, IVehicleWeapon> WeaponMounted { get; }
+        Dictionary<int, Abstract.ISlot<IVehicleWeapon>> Weapons { get; }
 
         uint PassagenersMax { get; }
         uint PassagenersCurrent { get; }
@@ -32,6 +30,11 @@ namespace Interfaces
         void GoHome();
         void GoToBuilding(Buildings.IBuilding building);
     }
+
+    //public class EngineSlot : Abstract.ISlot<IEngine>
+    //{
+
+    //}
 
     public interface IEngine : Abstract.IHaveMass, Abstract.IHaveItemSize
     {
@@ -49,5 +52,10 @@ namespace Interfaces
 
         uint Damage { get; }
         byte Accuracy { get; }
+
+        int MaxFireDistance { get; }
+        int FireRate { get; }
+
+
     }
 }

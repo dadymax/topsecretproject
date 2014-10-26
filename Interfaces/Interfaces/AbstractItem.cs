@@ -31,4 +31,22 @@ namespace Interfaces.Abstract
 
     }
 
+    public interface ISlot<T> : IHaveItemSize
+    {
+        ItemTypes SlotSupportItem { get; }
+        T ItemInside { get; set; }
+    }
+
+    public interface IItem : IHaveItemSize
+    {
+        ItemTypes TypeOfItem { get; }
+    }
+
+    [Flags]
+    public enum ItemTypes
+    {
+        VehicleWeapon,
+        VehicleEngine
+    }
+
 }
