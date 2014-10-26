@@ -8,22 +8,16 @@ namespace Realisations.Common
     /// <summary>
     /// Slot of some size that can hold one item of some type.
     /// </summary>
-    public abstract class Slot : HaveSize
+    public abstract class Slot : HaveSizeAndTag
     {
-        public Slot(SizeXY size)
-            : base(size)
-        {
-        }
-
-        public Slot(SizeXY size, SlottableItemType acceptedType)
-            : this(size)
+        public Slot(SlottableItemType acceptedType)
         {
             AcceptedItemType = acceptedType;
         }
 
         private SlottableItem itemInSlot;
 
-        public SlottableItemType AcceptedItemType { get; private set; }
+        public SlottableItemType AcceptedItemType { get; protected set; }
         public SlottableItem ItemInSlot
         {
             get { return itemInSlot; }
@@ -34,22 +28,17 @@ namespace Realisations.Common
     /// <summary>
     /// Grid of some size that can hold number of items of type <c>GridspaceItem</c> in ajustable order.
     /// </summary>
-    public abstract class Gridspace : HaveSize
+    public abstract class Gridspace : HaveSizeAndTag
     {
-        public Gridspace(SizeXY size)
-            : base(size)
+        public Gridspace(SizeXY size, GridspaceItemType acceptedType)
         {
+            Size = size;
             grid = new bool[size.X, size.Y];
             itemsInGrid = new Dictionary<GridspaceItem, InventoryPosition>();
-        }
-
-        public Gridspace(SizeXY size, GridspaceItemType acceptedType)
-            : this(size)
-        {
             AcceptedItemType = acceptedType;
         }
 
-        public GridspaceItemType AcceptedItemType { get; private set; }
+        public GridspaceItemType AcceptedItemType { get; protected set; }
 
         private bool[,] grid;
 
@@ -168,42 +157,44 @@ namespace Realisations.Common
     /// <summary>
     /// Item that must be placed in slot.
     /// </summary>
-    public abstract class SlottableItem : HaveSize
+    public abstract class SlottableItem : HaveMassAndSize
     {
-        public SlottableItem(SizeXY size, SlottableItemType itemType)
-            : base(size)
+        public SlottableItem(SlottableItemType itemType)
         {
             TypeOfItem = itemType;
         }
 
-        public SlottableItemType TypeOfItem { get; private set; }
+        public SlottableItemType TypeOfItem { get; protected set; }
     }
 
     /// <summary>
     /// Item that must be placed in grid.
     /// </summary>
-    public abstract class GridspaceItem: HaveSize
+    public abstract class GridspaceItem: HaveMassAndSize
     {
-        public GridspaceItem(SizeXY size, GridspaceItemType itemType)
-            : base(size)
+        public GridspaceItem(GridspaceItemType itemType)
         {
             TypeOfItem = itemType;
         }
 
-        public GridspaceItemType TypeOfItem { get; private set; }
+        public GridspaceItemType TypeOfItem { get; protected set; }
+    }
+
+    public abstract class HaveMassAndSize : HaveSizeAndTag, IHaveName, IHaveMass
+    {
+        public string Name { get; set; }
+
+        public uint Mass { get; set; }
     }
 
     /// <summary>
     /// This item have some size that unchanged with time.
     /// </summary>
-    public abstract class HaveSize
+    public abstract class HaveSizeAndTag: IHaveTag
     {
-        public HaveSize(SizeXY size)
-        {
-            Size = size;
-        }
+        public SizeXY Size { get; protected set; }
 
-        public SizeXY Size { get; private set; }
+        public string Tag { get; set; }
     }
 
     /// <summary>
@@ -222,4 +213,26 @@ namespace Realisations.Common
     {
         VehicleEquipment
     }
+
+    public abstract class HaveHeapthPoints
+    {
+        public uint HeapthPoints { get; protected set; }
+    }
+
+    public interface IHaveName
+    {
+        string Name { get; set; }
+    }
+
+    public interface IHaveMass
+    {
+        uint Mass { get; set; }
+    }
+
+    public interface IHaveTag
+    {
+        string Tag { get; set; }
+    }
+
+
 }

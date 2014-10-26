@@ -8,15 +8,13 @@ namespace Realisations.Vehicles.Weapons
     /// <summary>
     /// Abstract vehicle weapon is slottable and has some properties.
     /// </summary>
-    public sealed class VehicleWeapon : Common.SlottableItem
+    public sealed class VehicleWeaponItem : Common.SlottableItem
     {
-        public VehicleWeapon(Common.SizeXY size)
-            : base(size, Common.SlottableItemType.VehicleWeapon)
+        public VehicleWeaponItem()
+            : base(Common.SlottableItemType.VehicleWeapon)
         {
 
         }
-
-        public string Name { get; private set; }
 
         public int Damage { get; private set; }
 
@@ -28,6 +26,8 @@ namespace Realisations.Vehicles.Weapons
         public uint AmmoCapacity { get; private set; }
         public uint AmmoLeft { get; private set; }
         public uint AmmoForOneShot { get; private set; }
+
+        public uint RateOfFire { get; private set; }
 
         public delegate void PlayFireDelegate(uint rounds);
         public PlayFireDelegate Playfire { get; set; }
@@ -74,8 +74,8 @@ namespace Realisations.Vehicles.Weapons
     /// </summary>
     public sealed class VehicleWeaponSlot : Common.Slot
     {
-        public VehicleWeaponSlot(Common.SizeXY size)
-            : base(size, Common.SlottableItemType.VehicleWeapon)
+        public VehicleWeaponSlot()
+            : base(Common.SlottableItemType.VehicleWeapon)
         {
 
         }

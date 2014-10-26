@@ -5,10 +5,10 @@ using System.Text;
 
 namespace Realisations.Vehicles.Equipment
 {
-    public sealed class VehicleEquipment : Common.GridspaceItem
+    public sealed class VehicleEquipmentItem : Common.GridspaceItem
     {
-        public VehicleEquipment(Common.SizeXY size)
-            : base(size, Common.GridspaceItemType.VehicleEquipment)
+        public VehicleEquipmentItem()
+            : base(Common.GridspaceItemType.VehicleEquipment)
         {
 
         }
