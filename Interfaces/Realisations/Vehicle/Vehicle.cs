@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Realisations.Vehicles
 {
-    public class Vehicle : Common.HaveHeapthPoints, Common.IHaveName, Common.IHaveMass
+    public class Vehicle : Common.HaveHeapthPoints, Common.IHaveName, Common.IHaveMass, Common.IHaveID
     {
         public Vehicle()
         {
@@ -23,6 +23,8 @@ namespace Realisations.Vehicles
         //some attributes
         //
         public Common.Coordinates coordinates;
+        
+        public ulong Id {get;set;}
 
         public string Name { get; set; }
 
@@ -110,6 +112,27 @@ namespace Realisations.Vehicles
                 return (uint)innerDict.Sum(condition);
             }
         }
+    }
+    
+    public enum VehicleTypes
+    {
+    	Player,
+    	Ufo,
+    	Civilian
+    }
+    
+    public class VehicleCollection
+    {
+    	public VehicleCollection()
+    	{
+    		vehicles = new Dictionary<VehicleTypes, List<Vehicle>>()
+    		{
+    			{VehicleTypes.Player, new List<Vehicle>()},
+    			{VehicleTypes.Ufo, new List<Vehicle>()},
+    			{VehicleTypes.Civilian, new List<Vehicle>()}
+    		};
+    	}
+    	public Dictionary<VehicleTypes, List<Vehicle>> vehicles;
     }
 }
 

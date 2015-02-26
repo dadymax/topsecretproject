@@ -8,7 +8,7 @@ namespace Realisations.Common
     /// <summary>
     /// 3 dimensions coordinates, where Z axis is named Level.
     /// </summary>
-    public class Coordinates : InventoryPosition
+    public class Coordinates : GridPosition
     {
         public int Level { get; set; }
     }
@@ -16,7 +16,7 @@ namespace Realisations.Common
     /// <summary>
     /// Position of something somewere. Commonly position of item in inventory grid.
     /// </summary>
-    public class InventoryPosition
+    public class GridPosition
     {
         public int X { get; set; }
         public int Y { get; set; }

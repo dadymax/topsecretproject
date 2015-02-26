@@ -55,7 +55,5 @@ namespace Interfaces.Vehicles
 
         int MaxFireDistance { get; }
         int FireRate { get; }
-
-
     }
 }

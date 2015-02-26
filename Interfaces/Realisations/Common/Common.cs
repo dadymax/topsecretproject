@@ -28,21 +28,29 @@ namespace Realisations.Common
     /// <summary>
     /// Grid of some size that can hold number of items of type <c>GridspaceItem</c> in ajustable order.
     /// </summary>
-    public abstract class Gridspace : HaveSizeAndTag
+    public class Gridspace : HaveSizeAndTag
     {
         public Gridspace(SizeXY size, GridspaceItemType acceptedType)
         {
             Size = size;
             grid = new bool[size.X, size.Y];
-            itemsInGrid = new Dictionary<GridspaceItem, InventoryPosition>();
+            itemsInGrid = new Dictionary<GridspaceItem, GridPosition>();
             AcceptedItemType = acceptedType;
         }
 
         public GridspaceItemType AcceptedItemType { get; protected set; }
 
-        private bool[,] grid;
+        /// <summary>
+        /// Two dimension table of booleans that represent occupied and free cells
+        /// </summary>
+        protected bool[,] grid;
 
-        Dictionary<GridspaceItem, InventoryPosition> itemsInGrid;
+        protected Dictionary<GridspaceItem, GridPosition> itemsInGrid;
+        
+        public Dictionary<GridspaceItem, GridPosition> GetItemsInGrid
+        {
+        	get {return new Dictionary<GridspaceItem, GridPosition>(itemsInGrid);}
+        }
 
         /// <summary>
         /// Add item to grid at position.
@@ -50,15 +58,19 @@ namespace Realisations.Common
         /// <param name="item"><c>GridspaceItem</c> to add.</param>
         /// <param name="position">Position to add.</param>
         /// <returns>true if adding succesfully, otherwise false.</returns>
-        public bool AddItemToGrid(GridspaceItem item, InventoryPosition position)
+        public bool AddItemToGrid(GridspaceItem item, GridPosition position)
         {
             if (item == null || position == null || position.X < 0 || position.Y < 0)
                 return false;
+            
+            if (item.TypeOfItem != this.AcceptedItemType)
+            	return false;
 
             if (Size.X < position.X + item.Size.X || Size.Y < position.Y + item.Size.Y)
                 return false;
 
-            ValidateGridValues(position, item.Size, false);
+            if (!ValidateGridValues(position, item.Size, false))
+            	return false;
 
             itemsInGrid.Add(item, position);
 
@@ -77,8 +89,7 @@ namespace Realisations.Common
             if (!itemsInGrid.ContainsKey(item))
                 return false;
 
-
-            InventoryPosition position = itemsInGrid[item];
+            GridPosition position = itemsInGrid[item];
 
             itemsInGrid.Remove(item);
             SetGridValues(position, item.Size, false);
@@ -91,7 +102,7 @@ namespace Realisations.Common
         /// </summary>
         /// <param name="position">position of item.</param>
         /// <returns><c>GridspaceItem</c> if found or null if nothing found in provided position.</returns>
-        public GridspaceItem GetItemFromPosition(InventoryPosition position)
+        public GridspaceItem GetItemFromPosition(GridPosition position)
         {
             if (position == null)
                 return null;
@@ -112,7 +123,7 @@ namespace Realisations.Common
         /// <param name="item">Item to move.</param>
         /// <param name="newPosition">Position where to move.</param>
         /// <returns>true if move operation succesfull, otherwise false.</returns>
-        public bool MoveItemInside(GridspaceItem item, InventoryPosition newPosition)
+        public bool MoveItemInside(GridspaceItem item, GridPosition newPosition)
         {
             if (newPosition == null || !itemsInGrid.ContainsKey(item))
                 return false;
@@ -130,14 +141,26 @@ namespace Realisations.Common
             return true;
         }
 
-
-        private void SetGridValues(InventoryPosition position, SizeXY size, bool value)
+        /// <summary>
+        /// Sets selected cells of grid to value. 
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="size"></param>
+        /// <param name="value"></param>
+        private void SetGridValues(GridPosition position, SizeXY size, bool value)
         {
             foreach (var pair in EnumerateGridRectangle(position, size))
                 grid[pair.Item1, pair.Item2] = value;
         }
 
-        private bool ValidateGridValues(InventoryPosition position, SizeXY size, bool valueToValidate)
+        /// <summary>
+        /// Checks that on this position item with given size present or abscent.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="size"></param>
+        /// <param name="valueToValidate"></param>
+        /// <returns></returns>
+        private bool ValidateGridValues(GridPosition position, SizeXY size, bool valueToValidate)
         {
             foreach (var pair in EnumerateGridRectangle(position, size))
                 if (grid[pair.Item1, pair.Item2] != valueToValidate)
@@ -146,7 +169,7 @@ namespace Realisations.Common
             return true;
         }
 
-        private IEnumerable<Tuple<int, int>> EnumerateGridRectangle(InventoryPosition position, SizeXY size)
+        private IEnumerable<Tuple<int, int>> EnumerateGridRectangle(GridPosition position, SizeXY size)
         {
             for (int i = position.X; i < size.X; i++)
                 for (int j = position.Y; j < size.Y; j++)
@@ -211,7 +234,8 @@ namespace Realisations.Common
     /// </summary>
     public enum GridspaceItemType
     {
-        VehicleEquipment
+        VehicleEquipment,
+        BuildingCell
     }
 
     public abstract class HaveHeapthPoints
@@ -232,6 +256,11 @@ namespace Realisations.Common
     public interface IHaveTag
     {
         string Tag { get; set; }
+    }
+    
+    public interface IHaveID
+    {
+    	ulong Id {get;set;}
     }
 
 

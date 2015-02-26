@@ -66,7 +66,6 @@ namespace Realisations.Vehicles.Weapons
             AmmoLeft += ammoNeeded;
             return true;
         }
-
     }
 
     /// <summary>
@@ -83,6 +82,8 @@ namespace Realisations.Vehicles.Weapons
 
     public enum VehicleWeaponAmmoTypes
     {
-        Bullet50cal
+        Bullet50cal,
+        CommonBullet,
+        CommonRocket
     }
 }
